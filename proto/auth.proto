@@ -2,15 +2,42 @@ syntax = "proto3";
 
 package auth;
 
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+
 service AuthService {
     rpc Register (RegisterRequest) returns (RegisterResponse) {}
-    rpc Login (LoginRequest) returns (LoginRequest) {}
+    rpc Login (LoginRequest) returns (LoginResponse) {}
+    rpc Confirm (ConfirmRequest) returns (ConfirmResponse) {}
+    rpc Resend (google.protobuf.Empty) returns (ResendResponse) {}
+    rpc WhoAmI (google.protobuf.Empty) returns (WhoAmIResponse) {}
 }
 
 message ErrorResponse {
     int32 statusCode = 1;
     string message = 2;
     string error = 3;
+}
+
+message GenericResponse {
+    oneof response {
+        google.protobuf.Struct data = 1;
+        ErrorResponse error = 2;
+    }
+}
+
+// Validate
+
+message ValidateRequest {
+    string token = 1;
+}
+
+message ValidateResponse {
+    oneof response {
+       LoginResult data = 1;
+       ErrorResponse error = 2;
+    }
 }
 
 // Register
@@ -27,7 +54,7 @@ message RegisterResult {
     int32 id = 3;
 }
 
-message RegisterResponse {
+message RegisterResponse  {
     oneof response {
         RegisterResult data = 1;
         ErrorResponse error = 2;
@@ -43,13 +70,47 @@ message LoginRequest {
 
 message LoginResult {
     string email = 1;
-    string password = 2;
+    string username = 2;
     int32 id = 3;
+    bool isEmailConfirmed = 4;
+    string token = 5;
 }
 
 message LoginResponse {
     oneof response {
         LoginResult data = 1;
+        ErrorResponse error = 2;
+    }
+}
+
+// Confirm
+
+message ConfirmRequest {
+    string token = 1;
+}
+
+message ConfirmResponse {
+    optional ErrorResponse error = 1;
+}
+
+// Resend
+
+message ResendResponse {
+    optional ErrorResponse error = 1;
+}
+
+//Who Am I
+
+message WhoAmIResult {
+    int32 id = 1;
+    string email = 2;
+    string username = 3;
+    bool isEmailConfirmed = 4;
+}
+
+message WhoAmIResponse {
+    oneof response {
+        WhoAmIResult data = 1;
         ErrorResponse error = 2;
     }
 }
