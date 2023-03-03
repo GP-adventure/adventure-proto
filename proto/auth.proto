@@ -11,7 +11,7 @@ service AuthService {
     rpc Login (LoginRequest) returns (LoginResponse) {}
     rpc Confirm (ConfirmRequest) returns (ConfirmResponse) {}
     rpc Resend (google.protobuf.Empty) returns (ResendResponse) {}
-    rpc WhoAmI (google.protobuf.Empty) returns (WhoAmIResponse) {}
+    rpc WhoAmI (WhoAmIRequest) returns (WhoAmIResponse) {}
 }
 
 message ErrorResponse {
@@ -100,6 +100,10 @@ message ResendResponse {
 }
 
 //Who Am I
+
+message  WhoAmIRequest {
+    string  token = 1;
+}
 
 message WhoAmIResult {
     int32 id = 1;
