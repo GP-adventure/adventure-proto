@@ -9,7 +9,7 @@ import "google/protobuf/struct.proto";
 service AuthService {
     rpc Register (RegisterRequest) returns (RegisterResponse) {}
     rpc Login (LoginRequest) returns (LoginResponse) {}
-    rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+    rpc Logout (google.protobuf.Empty) returns (LogoutResponse) {}
     rpc Confirm (ConfirmRequest) returns (ConfirmResponse) {}
     rpc Resend (google.protobuf.Empty) returns (ResendResponse) {}
     rpc WhoAmI (WhoAmIRequest) returns (WhoAmIResponse) {}
@@ -84,7 +84,20 @@ message LoginResponse {
     }
 }
 
-// Confirm
+// Logout
+
+message LogoutResult {
+    string token = 1;
+}
+
+message LogoutResponse {
+    oneof response {
+        LogoutResult data = 1;
+        ErrorResponse error = 2;
+    }
+}
+
+// Confim
 
 message ConfirmRequest {
     string token = 1;
